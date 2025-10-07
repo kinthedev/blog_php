@@ -12,7 +12,14 @@ function getEmail($email)
 function getUser($username)
 {
     $conn = databaseConnection();
-    $stmt = $conn->prepare("SELECT username FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT username FROM users WHERE username = ? ");
+    $stmt->execute([$username]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+function getId($username)
+{
+    $conn = databaseConnection();
+    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? ");
     $stmt->execute([$username]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -33,6 +40,16 @@ function checkPassword($usernameoremail)
 function insertUser($email, $username, $password)
 {
     $conn = databaseConnection();
-    $stmt = $conn->prepare("INSERT into users(username,email,password) value(?,?,?)");
+    $stmt = $conn->prepare("INSERT into users(username,email,password,avatar,background) value(?,?,?,null,null)");
     $stmt->execute([$email, $username, $password]);
+}
+function getUsername($value)
+{
+    $result =  getUser($value);
+    return $result["username"];
+}
+function getIdUsers($value)
+{
+    $result =  getId($value);
+    return $result["id"];
 }
